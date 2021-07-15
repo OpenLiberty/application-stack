@@ -7,7 +7,7 @@ COMP_NAME="${COMP_NAME:-default-component}"
 PROJ_NAME="${PROJ_NAME:-default-test}"
 
 # Liberty server config directory path.
-LIBERTY_SERVER_LOGS_DIR_PATH='/projects/target/liberty/wlp/usr/servers/defaultServer/logs'
+LIBERTY_SERVER_LOGS_DIR_PATH='/opt/ol/wlp/usr/servers/defaultServer/logs'
 
 # Base inner loop test using ODO.
 echo -e "\n> Create new odo project"

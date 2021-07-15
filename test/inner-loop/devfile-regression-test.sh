@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo -e "\n> Get new stack image version"
+stackImage=$(cat build-ol.sh | grep "openliberty/application-stack:")
+stackImageVersion=$(echo ${stackImage##*:} | sed 's/\}\"//')
+echo "New stack image version: $stackImageVersion"
+
 echo -e "\n> Make stacktest regression dir"
 mkdir stacktest-reg
 cd stacktest-reg
@@ -9,9 +14,29 @@ cd stacktest-reg
 # introduced via this current PR being tested
 echo -e "\n> Clone the main branch stack repo"
 git clone https://github.com/OpenLiberty/application-stack.git
+cd application-stack
+
+echo -e "\n> Check new stack image version"
+currentStackImage=$(cat build-ol.sh | grep "openliberty/application-stack:")
+currentStackImageVersion=$(echo ${currentStackImage##*:} | sed 's/\}\"//')
+
+echo "Current stack image version: $currentStackImageVersion"
+echo "New stack image version: $stackImageVersion"
+
+currVerArray=( ${currentStackImageVersion//./ } )  
+newVerArray=( ${stackImageVersion//./ } ) 
+
+if [[ "$currentStackImageVersion" == "$stackImageVersion" ]]; then
+    echo "SKIPPING - Stack image version has not changed. No need to regression test.";
+    exit 0;
+elif [[ newVerArray[0] -ne currVerArray[0] || newVerArray[1] -ne currVerArray[1] ]]; then
+    echo "SKIPPING - New major.minor stack image. No need to regression test";
+    exit 0;
+else
+    echo "Micro version change detected - running regression test";
+fi
 
 echo -e "\n> Run buildStack from the main branch in stack repo that was just cloned"
-cd application-stack
 ./test/utils.sh buildStack
 
 echo -e "\n> Make a test app dir for test project"

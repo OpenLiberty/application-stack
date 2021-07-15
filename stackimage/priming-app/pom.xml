@@ -31,6 +31,8 @@
         <eclipse-microprofile-version>4.0.1</eclipse-microprofile-version>
         <jakarta-jakartaee-api-version>8.0.0</jakarta-jakartaee-api-version>
         <liberty.bootstrap.project.name>${project.artifactId}</liberty.bootstrap.project.name>
+        <liberty.runtime.groupid>io.openliberty</liberty.runtime.groupid>
+        <liberty.runtime.artifactid>openliberty-kernel</liberty.runtime.artifactid>
     </properties>
 
     <groupId>dev.odo.java-openliberty.samples</groupId>
@@ -106,10 +108,10 @@
                     <mergeServerEnv>true</mergeServerEnv>
                     <stripVersion>true</stripVersion>
                     <serverStartTimeout>360</serverStartTimeout>
-                    <!-- Why not install openliberty-runtime?  Because it would get overwritten if the app POM uses kernel (the default), and then all the .esa artifacts would need to be downloaded from Maven Central anyway ! -->
+                    <!-- This configuration is used to download the runtime specified by the stackimage Dockerfile -->
                     <runtimeArtifact>
-                        <groupId>io.openliberty</groupId>
-                        <artifactId>openliberty-kernel</artifactId>
+                        <groupId>${liberty.runtime.groupid}</groupId>
+                        <artifactId>${liberty.runtime.artifactid}</artifactId>
                         <version>${liberty.runtime.version}</version>
                         <type>zip</type>
                     </runtimeArtifact>
